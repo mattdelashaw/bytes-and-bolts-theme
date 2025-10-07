@@ -47,8 +47,12 @@
   {{ $cssMain := resources.Get "css/compiled/main.css" }}
   {{ $assets.Add "css" (slice $cssMain) }}
   {{ $cssCustom := resources.Get "css/custom.css" }}
+  {{ $cssFog := resources.Get "css/fog.css" }}
   {{ if $cssCustom }}
     {{ $assets.Add "css" (slice $cssCustom) }}
+  {{ end }}
+  {{ if $cssFog }}
+    {{ $assets.Add "css" (slice $cssFog) }}
   {{ end }}
   {{ if not .Site.Params.disableImageZoom | default true }}
     {{ $cssZoom := resources.Get "lib/zoom/style.css" }}
