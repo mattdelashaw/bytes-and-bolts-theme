@@ -3,19 +3,22 @@
 {{- end }}
 
 {{ define "RenderImageResponsive" -}}
-  <img
-    class="my-0 rounded-md"
-    loading="lazy"
-    decoding="async"
-    fetchpriority="low"
-    alt="{{ .alt }}"
-    srcset="
-      {{ (.resource.Resize "330x").RelPermalink }}  330w,
-      {{ (.resource.Resize "660x").RelPermalink }}  660w,
-      {{ (.resource.Resize "1280x").RelPermalink }} 1280w
-    "
-    data-zoom-src="{{ .resource.RelPermalink }}"
-    src="{{ .resource.RelPermalink }}">
+  {{ $img := .resource }}
+  {{ $alt := .alt }}
+  {{ $src := $img.RelPermalink }}
+
+  <picture>
+    {{ with $img.Process "webp" }}
+      <source srcset="{{ .RelPermalink }}" type="image/webp">
+    {{ end }}
+    <img
+      class="my-0 rounded-md"
+      loading="lazy"
+      decoding="async"
+      fetchpriority="low"
+      alt="{{ $alt }}"
+      src="{{ $src }}">
+  </picture>
 {{- end }}
 
 {{ define "RenderImageCaption" -}}

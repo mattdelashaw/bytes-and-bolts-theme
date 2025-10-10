@@ -1,0 +1,7 @@
+<video controls preload="metadata" style="max-width: 100%; height: auto;">
+  <source src="{{ .Get "src" }}" type="video/mp4">
+  {{ with .Get "alt" }}
+    <p>{{ . }}</p>
+  {{ end }}
+  Your browser does not support the video tag.
+</video>
