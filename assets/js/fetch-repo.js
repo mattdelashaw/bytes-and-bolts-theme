@@ -82,7 +82,7 @@
           value = processors[platform][dataField](value);
         }
         if (value != null && value !== "") {
-          element.innerHTML = value;
+          element.textContent = value;
         }
       }
     });

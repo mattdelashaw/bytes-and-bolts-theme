@@ -10,7 +10,7 @@ const usersFolderPath = "./exampleSite/content/users/";
 let cache = {};
 
 function generateDirName(seed) {
-  const hash = crypto.createHash("md5");
+  const hash = crypto.createHash("sha256");
   hash.update(seed);
   return hash.digest("hex");
 }

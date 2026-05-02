@@ -1,9 +1,23 @@
+const path = require("path");
 const fs = require("fs/promises");
 const translate = require("@iamtraction/google-translate");
 
 const defaultLang = "en";
 const targetLang = process.argv[2] || "en";
-const filePath = process.argv[3];
+let filePath = process.argv[3];
+
+if (!filePath) {
+  console.error("Please provide a file path.");
+  process.exit(1);
+}
+
+// Resolve and normalize the path to prevent traversal
+filePath = path.resolve(filePath);
+if (!filePath.startsWith(process.cwd())) {
+  console.error("Invalid file path.");
+  process.exit(1);
+}
+
 const targetLangIso = targetLang == "pt" ? "pt-pt" : targetLang;
 const targetFilePath = filePath.replace(".md", "." + targetLangIso + ".md");
 
