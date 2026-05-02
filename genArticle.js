@@ -12,14 +12,18 @@ if (!filePath) {
 }
 
 // Resolve and normalize the path to prevent traversal
-filePath = path.resolve(filePath);
-if (!filePath.startsWith(process.cwd())) {
-  console.error("Invalid file path.");
-  process.exit(1);
-}
+const safePath = (untrustedPath) => {
+  const normalizedPath = path.normalize(untrustedPath).replace(/^(\.\.(\/|\\|$))+/, "");
+  const resolvedPath = path.resolve(process.cwd(), normalizedPath);
+  if (!resolvedPath.startsWith(process.cwd())) {
+    throw new Error("Invalid file path.");
+  }
+  return resolvedPath;
+};
 
+const validatedFilePath = safePath(filePath);
 const targetLangIso = targetLang == "pt" ? "pt-pt" : targetLang;
-const targetFilePath = filePath.replace(".md", "." + targetLangIso + ".md");
+const validatedTargetFilePath = validatedFilePath.replace(".md", "." + targetLangIso + ".md");
 
 async function convert(text, from, to) {
   const options = { from, to };
@@ -57,7 +61,7 @@ async function processFrontMatter(block) {
 }
 
 async function main() {
-  const fileContent = await fs.readFile(filePath, "utf8");
+  const fileContent = await fs.readFile(validatedFilePath, "utf8");
 
   const array = fileContent.split("---\n");
   const frontMatter = array[1];
@@ -68,7 +72,7 @@ async function main() {
 
   const newFileContent =
     "---\n" + translatedFrontMatter + "---\n" + translatedContent;
-  await fs.writeFile(targetFilePath, newFileContent, "utf8");
+  await fs.writeFile(validatedTargetFilePath, newFileContent, "utf8");
 }
 
 main();
